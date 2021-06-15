@@ -1,0 +1,20 @@
+---
+ - hosts: all
+   gather_facts: false
+   tasks:
+   - debug:
+          msg: "deployment start"
+   - name: Unzip WAR file and restart Tomcat service
+     unarchive: 
+         src: /apps/workspace/Jenkins_CI/webapp/target/webapp.war
+         dest: /opt/apache-tomcat-8.5.66/webapps/ROOT/ 
+         copy: no 
+         mode: 0755 
+     notify:
+        - Restart tomcat8
+   handlers:
+      - name: Restart tomcat8
+        shell: |
+             tomcatdown
+             sleep 5
+             tomcatup
